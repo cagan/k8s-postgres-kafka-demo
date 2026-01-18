@@ -1,0 +1,7 @@
+com/demo/app/repository/MessageRepository.class
+com/demo/app/service/KafkaProducerService.class
+com/demo/app/config/KafkaConfig.class
+com/demo/app/Application.class
+com/demo/app/controller/MessageController.class
+com/demo/app/model/Message.class
+com/demo/app/service/KafkaConsumerService.class

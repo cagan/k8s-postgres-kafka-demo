@@ -1,0 +1,28 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: k8s-postgres-kafka-demo
+
+build:
+  local:
+    push: false
+  artifacts:
+    - image: demo-app
+      context: .
+      jib:
+        type: maven
+        args:
+          - -DskipTests
+
+deploy:
+  kubectl:
+    manifests:
+      - k8s/postgres/*.yaml
+      - k8s/kafka/*.yaml
+      - k8s/app/*.yaml
+
+portForward:
+  - resourceType: service
+    resourceName: demo-app
+    port: 8080
+    localPort: 8080

@@ -1,0 +1,7 @@
+/Users/cagan/code/k8s-postgres-kafka-demo/src/main/java/com/demo/app/Application.java
+/Users/cagan/code/k8s-postgres-kafka-demo/src/main/java/com/demo/app/config/KafkaConfig.java
+/Users/cagan/code/k8s-postgres-kafka-demo/src/main/java/com/demo/app/controller/MessageController.java
+/Users/cagan/code/k8s-postgres-kafka-demo/src/main/java/com/demo/app/model/Message.java
+/Users/cagan/code/k8s-postgres-kafka-demo/src/main/java/com/demo/app/repository/MessageRepository.java
+/Users/cagan/code/k8s-postgres-kafka-demo/src/main/java/com/demo/app/service/KafkaConsumerService.java
+/Users/cagan/code/k8s-postgres-kafka-demo/src/main/java/com/demo/app/service/KafkaProducerService.java

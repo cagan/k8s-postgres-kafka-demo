@@ -1,0 +1,12 @@
+# Local development profile
+# Run with: ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+# Requires: ./scripts/dev-start.sh running in another terminal
+
+spring:
+  jpa:
+    show-sql: true
+
+logging:
+  level:
+    com.demo.app: DEBUG
+    org.flywaydb: DEBUG

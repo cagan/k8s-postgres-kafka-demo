@@ -1,6 +1,6 @@
 # Local development profile
-# Run with: ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
-# Requires: ./scripts/dev-start.sh running in another terminal
+# Run with: mvn spring-boot:run -Dspring-boot.run.profiles=local
+# Requires: skaffold dev -f skaffold-infra.yaml (LGTM stack on localhost:3000)
 
 spring:
   application:
@@ -12,18 +12,24 @@ spring:
         format_sql: true
     open-in-view: false
 
-# OpenTelemetry - SQL tracing
 management:
   tracing:
     sampling:
-      probability: 1.0  # 100% trace (for development)
+      probability: 1.0
+  otlp:
+    metrics:
+      export:
+        url: http://localhost:4318/v1/metrics
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/traces
+    logging:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/logs
 
-otel:
-  traces:
-    exporter: logging  # Console output (no collector required)
-  instrumentation:
-    jdbc:
-      enabled: true
 
 logging:
   level:

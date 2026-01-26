@@ -13,6 +13,7 @@ deploy:
       - k8s/postgres/*.yaml
       - k8s/kafka/*.yaml
       - k8s/kafdrop/*.yaml
+      - k8s/otel-lgtm/*.yaml
 
 portForward:
   - resourceType: service
@@ -27,3 +28,15 @@ portForward:
     resourceName: kafdrop
     port: 9000
     localPort: 9000
+  - resourceType: service
+    resourceName: otel-lgtm
+    port: 3000
+    localPort: 3000    # Grafana UI
+  - resourceType: service
+    resourceName: otel-lgtm
+    port: 4317
+    localPort: 4317    # OTLP gRPC
+  - resourceType: service
+    resourceName: otel-lgtm
+    port: 4318
+    localPort: 4318    # OTLP HTTP

@@ -31,7 +31,9 @@ profiles:
   # Infrastructure only - for local Java development
   - name: infra
     build:
-      artifacts: []  # No app build
+      artifacts: []
+      local:
+        push: false
     deploy:
       kubectl:
         manifests:

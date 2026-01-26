@@ -1,0 +1,29 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: k8s-postgres-kafka-demo-infra
+
+# No build - infrastructure only
+build:
+  artifacts: []
+
+deploy:
+  kubectl:
+    manifests:
+      - k8s/postgres/*.yaml
+      - k8s/kafka/*.yaml
+      - k8s/kafdrop/*.yaml
+
+portForward:
+  - resourceType: service
+    resourceName: postgres
+    port: 5432
+    localPort: 5432
+  - resourceType: service
+    resourceName: kafka
+    port: 9092
+    localPort: 9092
+  - resourceType: service
+    resourceName: kafdrop
+    port: 9000
+    localPort: 9000

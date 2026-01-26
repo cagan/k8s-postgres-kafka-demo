@@ -1,5 +1,12 @@
 HELP.md
 target/
+
+### Jib cache ###
+target/jib-cache/
+
+### JAR files ###
+*.jar
+*.jar.original
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

@@ -39,12 +39,8 @@ public class Flight {
     @Builder.Default
     private FlightStatus status = FlightStatus.SCHEDULED;
 
-    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "flight", orphanRemoval = true)
     @Builder.Default
     private List<Seat> seats = new ArrayList<>();
-
-    public void addSeat(Seat seat) {
-        seats.add(seat);
-        seat.setFlight(this);
-    }
 }

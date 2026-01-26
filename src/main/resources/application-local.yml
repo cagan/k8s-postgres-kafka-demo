@@ -3,12 +3,27 @@
 # Requires: ./scripts/dev-start.sh running in another terminal
 
 spring:
+  application:
+    name: k8s-postgres-kafka-demo
   jpa:
     show-sql: true
     properties:
       hibernate:
         format_sql: true
     open-in-view: false
+
+# OpenTelemetry - SQL tracing
+management:
+  tracing:
+    sampling:
+      probability: 1.0  # 100% trace (for development)
+
+otel:
+  traces:
+    exporter: logging  # Console output (no collector required)
+  instrumentation:
+    jdbc:
+      enabled: true
 
 logging:
   level:

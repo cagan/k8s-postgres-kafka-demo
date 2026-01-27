@@ -13,5 +13,6 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 
     // Seats ile birlikte çek (lazy loading sorunu olmaz)
     @Query("SELECT f FROM Flight f LEFT JOIN FETCH f.seats WHERE f.id = :id")
+//    @EntityGraph(attributePaths = "seats")
     Optional<Flight> findByIdWithSeats(@Param("id") Long id);
 }

@@ -226,6 +226,80 @@ public class HibernateTestService {
         log.info("Method ending - both Flight and Seats will be UPDATED...");
     }
 
+    // ==================== N+1 QUERY PROBLEM ====================
+
+    /**
+     * Senaryo 9: N+1 Query Problem
+     *
+     * PROBLEM: findAll() ile tüm Flight'ları çekiyoruz (1 query)
+     * Sonra her Flight için seats koleksiyonuna eriştiğimizde LAZY loading tetiklenir (N query)
+     * Toplamda: 1 + N query çalışır
+     *
+     * Örnek: 3 Flight varsa -> 1 Flight query + 3 Seat query = 4 query
+     *
+     * ÖNEMLİ: spring.jpa.show-sql=true yapın veya OpenTelemetry loglarına bakın
+     */
+    @Transactional
+    public void nPlusOneProblem() {
+        log.info("=== N+1 QUERY PROBLEM ===");
+
+        // 1. QUERY: SELECT * FROM flights
+        log.info("Step 1: Loading all flights...");
+        var flights = flightRepository.findAll();
+        log.info("Loaded {} flights", flights.size());
+
+        // N QUERIES: Her flight için ayrı SELECT * FROM seats WHERE flight_id = ?
+        log.info("Step 2: Accessing seats for each flight (watch for N additional queries)...");
+        for (Flight flight : flights) {
+            // Bu satır LAZY loading tetikler - her biri için ayrı query!
+            int seatCount = flight.getSeats().size();
+            log.info("Flight {} ({}) has {} seats [LAZY LOAD - triggers separate query!]",
+                    flight.getFlightNumber(),
+                    flight.getDestination(),
+                    seatCount);
+        }
+
+        log.info("=== TOTAL: 1 Flight query + {} Seat queries = {} queries ===",
+                flights.size(),
+                flights.size() + 1);
+        log.info("Check your SQL logs - you should see {} separate SELECT statements!",
+                flights.size() + 1);
+    }
+
+    /**
+     * Senaryo 10: N+1 Problem Çözümü - JOIN FETCH
+     *
+     * SOLUTION: LEFT JOIN FETCH ile Flight ve Seat'leri TEK QUERY'de çekiyoruz
+     * Toplamda: 1 query
+     *
+     * Örnek: 3 Flight varsa -> 1 query (Flight + Seats hepsi birlikte)
+     *
+     * DİKKAT: DISTINCT kullanmamız gerekiyor çünkü JOIN duplicate Flight satırları üretir
+     */
+    @Transactional
+    public void nPlusOneSolution() {
+        log.info("=== N+1 SOLUTION: JOIN FETCH ===");
+
+        // TEK QUERY: SELECT f.*, s.* FROM flights f LEFT JOIN seats s ON f.id = s.flight_id
+        log.info("Step 1: Loading all flights WITH seats using JOIN FETCH...");
+        var flights = flightRepository.findAllWithSeats();
+        log.info("Loaded {} flights with all seats in a SINGLE query", flights.size());
+
+        // NO ADDITIONAL QUERIES: Seats zaten yüklenmiş - lazy loading yok
+        log.info("Step 2: Accessing seats (NO additional queries - already loaded)...");
+        for (Flight flight : flights) {
+            // Bu satır artık query tetiklemiyor - seats zaten memory'de!
+            int seatCount = flight.getSeats().size();
+            log.info("Flight {} ({}) has {} seats [ALREADY LOADED - no query!]",
+                    flight.getFlightNumber(),
+                    flight.getDestination(),
+                    seatCount);
+        }
+
+        log.info("=== TOTAL: 1 query (Flight + Seats together) ===");
+        log.info("Check your SQL logs - you should see ONLY 1 SELECT statement with JOIN!");
+    }
+
     // ==================== HELPER ====================
 
     /**

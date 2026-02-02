@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +16,8 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
     @Query("SELECT f FROM Flight f LEFT JOIN FETCH f.seats WHERE f.id = :id")
 //    @EntityGraph(attributePaths = "seats")
     Optional<Flight> findByIdWithSeats(@Param("id") Long id);
+
+    // Tüm uçuşları seats ile birlikte çek (N+1 problemi çözümü)
+    @Query("SELECT DISTINCT f FROM Flight f LEFT JOIN FETCH f.seats")
+    List<Flight> findAllWithSeats();
 }

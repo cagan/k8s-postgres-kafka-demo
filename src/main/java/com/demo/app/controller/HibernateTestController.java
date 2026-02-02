@@ -75,6 +75,20 @@ public class HibernateTestController {
         return "Check logs - Flight + Seats UPDATE via dirty checking";
     }
 
+    // ==================== N+1 QUERY PROBLEM ====================
+
+    @PostMapping("/n-plus-one/problem")
+    public String nPlusOneProblem() {
+        hibernateTestService.nPlusOneProblem();
+        return "Check logs - N+1 query problem (1 Flight query + N Seat queries)";
+    }
+
+    @PostMapping("/n-plus-one/solution")
+    public String nPlusOneSolution() {
+        hibernateTestService.nPlusOneSolution();
+        return "Check logs - JOIN FETCH solution (1 query for all data)";
+    }
+
     // ==================== HELPER ====================
 
     @PostMapping("/reset")

@@ -1,12 +1,2 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-pvc
-  labels:
-    app: postgres
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+# PVC is managed separately in k8s/storage/ to persist across skaffold restarts
+# Apply once with: kubectl apply -f k8s/storage/

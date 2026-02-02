@@ -1,0 +1,42 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: k8s-postgres-kafka-demo-infra
+
+# No build - infrastructure only
+build:
+  artifacts: []
+
+deploy:
+  kubectl:
+    manifests:
+      - k8s/postgres/*.yaml
+      - k8s/kafka/*.yaml
+      - k8s/kafdrop/*.yaml
+      - k8s/otel-lgtm/*.yaml
+
+portForward:
+  - resourceType: service
+    resourceName: postgres
+    port: 5432
+    localPort: 5432
+  - resourceType: service
+    resourceName: kafka
+    port: 9092
+    localPort: 9092
+  - resourceType: service
+    resourceName: kafdrop
+    port: 9000
+    localPort: 9000
+  - resourceType: service
+    resourceName: otel-lgtm
+    port: 3000
+    localPort: 3000    # Grafana UI
+  - resourceType: service
+    resourceName: otel-lgtm
+    port: 4317
+    localPort: 4317    # OTLP gRPC
+  - resourceType: service
+    resourceName: otel-lgtm
+    port: 4318
+    localPort: 4318    # OTLP HTTP

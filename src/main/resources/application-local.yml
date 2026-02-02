@@ -1,0 +1,37 @@
+# Local development profile
+# Run with: mvn spring-boot:run -Dspring-boot.run.profiles=local
+# Requires: skaffold dev -f skaffold-infra.yaml (LGTM stack on localhost:3000)
+
+spring:
+  application:
+    name: k8s-postgres-kafka-demo
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    metrics:
+      export:
+        url: http://localhost:4318/v1/metrics
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/traces
+    logging:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/logs
+
+
+logging:
+  level:
+    com.demo.app: DEBUG
+    org.flywaydb: DEBUG
